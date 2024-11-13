@@ -2,7 +2,9 @@ name: GitHub Issue Chatbot
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited]  # Trigger the workflow when an issue is created or edited
+  schedule:
+    - cron: '0 0 * * 1'      # Runs every Monday at midnight UTC (adjust as needed)
 
 jobs:
   bot-job:
@@ -15,13 +17,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '14'  # Set Node.js version
 
       - name: Install dependencies
         run: npm install
 
       - name: Run Chatbot Script
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Uses the GitHub token stored in repository secrets
         run: |
           node chatbot.js
