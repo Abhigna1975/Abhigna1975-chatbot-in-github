@@ -1,19 +1,27 @@
-name: Bot Issue Management
+name: GitHub Issue Chatbot
+
 on:
-  issue_comment:
-    types: [created]
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 jobs:
-  run-bot:
+  bot-job:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Run Bot Script
-        uses: actions/github-script@v5
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          script: |
-            const issue = context.payload.issue;
-            if (issue) {
-              // Customize the bot's behavior based on labels, text, or commands in the issue
-            }
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Chatbot Script
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          node chatbot.js
